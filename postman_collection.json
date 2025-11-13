@@ -1,0 +1,91 @@
+{
+  "info": {
+    "name": "AIEngine Reviews",
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef0123456789",
+    "description": "Collection to test GET /reviews and POST /reviews",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST Review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"author\": \"Alice\",\n  \"text\": \"This is a test review from Postman.\",\n  \"rating\": 5\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/reviews",
+          "protocol": "http",
+          "host": [
+            "127","0","0","1"
+          ],
+          "port": "8000",
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201', function () {",
+              "  pm.response.to.have.status(201);",
+              "});",
+              "var data = pm.response.json();",
+              "pm.environment.set('posted_review_id', data.id);",
+              "pm.environment.set('posted_review_author', data.author);"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GET Reviews",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/reviews",
+          "protocol": "http",
+          "host": [
+            "127","0","0","1"
+          ],
+          "port": "8000",
+          "path": [
+            "reviews"
+          ]
+        }
+      },
+      "response": [],
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "var items = pm.response.json();",
+              "pm.test('Contains posted review id', function () {",
+              "  var id = parseInt(pm.environment.get('posted_review_id'), 10);",
+              "  pm.expect(items.map(function(r){return r.id;})).to.include(id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
