@@ -112,8 +112,7 @@ Please conduct an in-depth analysis using the following criteria:
 Provide the results in JSON format with the following structure:
 {{
     "analysis": "comprehensive analysis in English (maximum 500 words)",
-    "score": [score 1-100 based on overall evaluation],
-    "recommendations": ["recommendation 1", "recommendation 2", "recommendation 3"]
+    "score": [score 1-100 based on overall evaluation]
 }}
 
 Ensure the analysis is objective, constructive, and provides useful insights for mining system improvements.

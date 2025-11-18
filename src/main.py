@@ -49,7 +49,7 @@ async def analyze_questionnaire(
     - supporting_file: File pendukung optional untuk analisis tambahan
     
     Returns:
-    - Hasil analisis dengan skor 1-100 dan rekomendasi
+    - Hasil analisis dengan skor 1-100 saja
     """
     try:
         # Baca file pendukung jika ada
