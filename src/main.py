@@ -21,7 +21,6 @@ class ReviewCreate(BaseModel):
 class QuestionnaireAnalysis(BaseModel):
     analysis: str
     score: int = Field(..., ge=1, le=100)
-    recommendations: List[str] = []
     evaluation_date: datetime
 
 @app.get("/health")
@@ -49,7 +48,7 @@ async def analyze_questionnaire(
     - supporting_file: File pendukung optional untuk analisis tambahan
     
     Returns:
-    - Hasil analisis dengan skor 1-100 dan rekomendasi
+    - Hasil analisis dengan skor 1-100
     """
     try:
         # Baca file pendukung jika ada
@@ -69,7 +68,6 @@ async def analyze_questionnaire(
         return QuestionnaireAnalysis(
             analysis=result["analysis"],
             score=result["score"],
-            recommendations=result["recommendations"],
             evaluation_date=datetime.utcnow()
         )
         

@@ -45,7 +45,7 @@ class GeminiAnalyzer:
             file_name: Nama file pendukung
             
         Returns:
-            Dict berisi analysis, score, dan recommendations
+            Dict berisi analysis, and score.
         """
         try:
             # Parse jawaban kuisioner
@@ -112,8 +112,7 @@ Please conduct an in-depth analysis using the following criteria:
 Provide the results in JSON format with the following structure:
 {{
     "analysis": "comprehensive analysis in English (maximum 500 words)",
-    "score": [score 1-100 based on overall evaluation],
-    "recommendations": ["recommendation 1", "recommendation 2", "recommendation 3"]
+    "score": [score 1-100 based on overall evaluation]
 }}
 
 Ensure the analysis is objective, constructive, and provides useful insights for mining system improvements.
@@ -132,13 +131,9 @@ Ensure the analysis is objective, constructive, and provides useful insights for
         # Generate basic analysis
         analysis = self._create_basic_analysis(answers, file_name, score)
         
-        # Generate relevant recommendations
-        recommendations = self._generate_recommendations_based_on_data(answers)
-        
         return {
             "analysis": analysis,
-            "score": score,
-            "recommendations": recommendations
+            "score": score
         }
     
     def _calculate_simple_score(self, answers: Dict) -> int:
@@ -208,44 +203,10 @@ The evaluation covers multiple operational areas. Data completeness suggests a s
 COMPLIANCE & MANAGEMENT:
 The provided information indicates awareness of regulatory and operational requirements. Management systems appear to be documented.
 
-RECOMMENDATIONS FOCUS:
-Key areas for enhancement include safety protocol optimization, environmental impact monitoring, and operational efficiency improvements.
-
 Note: This analysis was generated using fallback system due to API limitations. For detailed AI-powered analysis, please try again later.
 """.strip()
         
         return analysis
-    
-    def _generate_recommendations_based_on_data(self, answers: Dict) -> List[str]:
-        """Generate recommendations based on data analysis."""
-        flattened = self._flatten_dict(answers)
-        recommendations = []
-        
-        # Safety recommendations
-        if any('safety' in key.lower() for key in flattened.keys()):
-            recommendations.append("Enhance safety protocols and monitoring systems")
-        
-        # Environmental recommendations
-        if any('environment' in key.lower() for key in flattened.keys()):
-            recommendations.append("Strengthen environmental impact mitigation strategies")
-        
-        # Operational recommendations
-        if any('operational' in key.lower() or 'efficiency' in key.lower() for key in flattened.keys()):
-            recommendations.append("Optimize operational efficiency and resource utilization")
-        
-        # Management recommendations
-        if any('management' in key.lower() or 'workforce' in key.lower() for key in flattened.keys()):
-            recommendations.append("Develop comprehensive workforce management programs")
-        
-        # Default recommendations if none specific
-        if not recommendations:
-            recommendations = [
-                "Implement comprehensive monitoring systems",
-                "Enhance regulatory compliance procedures",
-                "Develop continuous improvement strategies"
-            ]
-        
-        return recommendations[:4]  # Limit to 4 recommendations
     
     def _process_supporting_file(self, file_content: bytes, file_name: str) -> str:
         try:
@@ -267,7 +228,7 @@ Note: This analysis was generated using fallback system due to API limitations. 
             
             # Jika bukan JSON, cari pola JSON dalam teks
             import re
-            json_pattern = r'\{[^{}]*"analysis"[^{}]*"score"[^{}]*"recommendations"[^{}]*\}'
+            json_pattern = r'\{[^{}]*"analysis"[^{}]*"score"[^{}]*\}'
             matches = re.findall(json_pattern, result_text, re.DOTALL)
             
             if matches:
@@ -276,15 +237,13 @@ Note: This analysis was generated using fallback system due to API limitations. 
             # Fallback: buat struktur manual
             return {
                 "analysis": result_text[:500] + ".." if len(result_text) > 500 else result_text,
-                "score": 75,  # Default score
-                "recommendations": ["Lakukan review lebih lanjut", "Konsultasi dengan ahli", "Update dokumentasi"]
+                "score": 75  # Default score
             }
             
         except Exception:
             return {
                 "analysis": "Analisis berhasil dilakukan namun format respons tidak standar. " + result_text[:300],
-                "score": 70,
-                "recommendations": ["Review hasil analisis", "Validasi dengan expert", "Lakukan assessment ulang"]
+                "score": 70
             }
 
 analyzer = GeminiAnalyzer()
