@@ -16,15 +16,16 @@ class GeminiAnalyzer:
             raise ValueError('API_GEMINI not configured. Get key from: https://makersuite.google.com/app/apikey')
         
         try:
+            # Configure API key
             genai.configure(api_key=self.api_key)
-            # Use more stable model with higher quota
-            self.model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-            print("[Real Mode] GeminiAnalyzer initialized with gemini-1.5-flash")
+            # Initialize model dengan API yang benar
+            self.model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+            print("[Real Mode] GeminiAnalyzer initialized with gemini-2.5-flash")
         except Exception as e:
             print(f"[DEBUG] Error configuring Gemini: {e}")
             raise
 
-    def ask(self, prompt: str, model_name: str = "gemini-1.5-flash") -> str:
+    def ask(self, prompt: str, model_name: str = "gemini-2.5-flash") -> str:
         """Send a prompt to the Gemini model and return the text response."""
         try:
             model = genai.GenerativeModel(model_name=model_name)
@@ -296,7 +297,7 @@ async def analyze_mining_questionnaire(questionnaire_answers: str, supporting_fi
     )
 
 # Legacy functions untuk backward compatibility
-def ask(prompt: str, model_name: str = "gemini-1.5-flash") -> str:
+def ask(prompt: str, model_name: str = "gemini-2.5-flash") -> str:
     """Legacy ask function untuk backward compatibility."""
     return analyzer.ask(prompt, model_name)
 
