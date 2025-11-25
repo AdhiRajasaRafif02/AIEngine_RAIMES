@@ -22,6 +22,7 @@ class QuestionnaireAnalysis(BaseModel):
     analysis: str
     score: int = Field(..., ge=1, le=100)
     evaluation_date: datetime
+    score_details: Optional[Dict] = None
 
 @app.get("/health")
 def health() -> Dict[str, str]:
@@ -38,13 +39,13 @@ def read_item(item_id: int):
 
 @app.post("/analyze-mining-questionnaire", response_model=QuestionnaireAnalysis)
 async def analyze_questionnaire(
-    questionnaire_answers: str = Form(..., description="JSON string berisi jawaban kuisioner mining evaluation"),
+    questionnaire_answers: str = Form(..., description="String jawaban kuisioner mining evaluation (bisa plain text atau JSON)"),
     supporting_file: Optional[UploadFile] = File(None, description="File pendukung (PDF, DOC, TXT, dll)")
 ):
     """Analisis jawaban kuisioner mining evaluation system menggunakan Gemini AI.
     
     Parameters:
-    - questionnaire_answers: String JSON berisi jawaban kuisioner
+    - questionnaire_answers: String jawaban kuisioner (bisa plain text atau JSON format)
     - supporting_file: File pendukung optional untuk analisis tambahan
     
     Returns:
@@ -68,7 +69,8 @@ async def analyze_questionnaire(
         return QuestionnaireAnalysis(
             analysis=result["analysis"],
             score=result["score"],
-            evaluation_date=datetime.utcnow()
+            evaluation_date=datetime.utcnow(),
+            score_details=result.get("score_details", None)
         )
         
     except Exception as e:
